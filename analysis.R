@@ -37,15 +37,42 @@ bilt_70_summer <- bilt_70 %>% filter(month(YYYYMMDD) %in% c(7,8))
 bilt_70_summer_num <- bilt_70 %>% select(-c(YYYYMMDD, vec_mean_windsp))
 
 # Filter last 30 years
-bilt_30_summer <- bilt_70 %>% filter(year(YYYYMMDD) > 1990)
+bilt_30_summer <- bilt_70_summer %>% filter(year(YYYYMMDD) > 1990)
 bilt_30_summer_num <- bilt_30_summer %>% select(-c(YYYYMMDD, vec_mean_windsp))
 
 # Filter last 3 years
-bilt_3_summer <- bilt_70 %>% filter(year(YYYYMMDD) %in% c(2019, 2020, 2021))
+bilt_3_summer <- bilt_70_summer %>% filter(year(YYYYMMDD) %in% c(2019, 2020, 2021))
 bilt_3_summer_num <- bilt_3_summer %>% select(-c(YYYYMMDD, vec_mean_windsp))
-  
-colMeans(bilt_70_summer_num)
-colMeans(bilt_30_summer_num)
+
+# Filter last 1 year
+bilt_1_summer <- bilt_70_summer %>% filter(year(YYYYMMDD) %in% 2021)
+bilt_1_summer_num <- bilt_3_summer %>% select(-c(YYYYMMDD, vec_mean_windsp))
+
+# Just means
+colMeans(bilt_1_summer_num)
 colMeans(bilt_3_summer_num)
+colMeans(bilt_30_summer_num)
+colMeans(bilt_70_summer_num)
+
+mean_70 <- data.frame(mean = colMeans(bilt_70_summer_num), variable = names(bilt_70_summer_num), history = '70j')
+mean_30 <- data.frame(mean = colMeans(bilt_30_summer_num), variable = names(bilt_30_summer_num), history = '30j')
+mean_3 <- data.frame(mean = colMeans(bilt_3_summer_num), variable = names(bilt_3_summer_num), history = '3j')
+mean_1 <- data.frame(mean = colMeans(bilt_1_summer_num), variable = names(bilt_1_summer_num), history = '1j')
+
+bound_means <- rbind(mean_70, mean_30, mean_3, mean_1)
+
+bound_means$history <- as.factor(bound_means$history)
+levels(bound_means$history) <- c('1j', '3j', '30j' ,'70j')
 
 
+# grouped
+ggplot(bound_means, aes(fill = history, y = mean, x = variable)) + 
+  geom_bar(position="dodge", stat="identity") 
+  
+
+op basis van andere tweets (
+  @pr8npraal
+  
+  
+  @emiloost
+) ik heb de data van De Bilt analyzed en het blijkt dat we cognitive dissonance hebben. Nederlandse zomer zijn idd zoals van deze zomer
